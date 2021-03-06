@@ -11,9 +11,7 @@ library(MASS)
 # CONSTANTS #
 ################################################################################################################
 
-set.seed(11)
 num_subjects = 20
-
 noise.z = 0.05
 noise.x = 0.05
 
@@ -27,7 +25,10 @@ MAX_CN = 10
 MAX_SCN = 8
 MAX_CPG_PER_SC = 44
 
+# specify the project directory:
 inpath = ""
+
+# specify output directory where files will be saved:
 outpath = ""
 
 
@@ -35,6 +36,9 @@ outpath = ""
 # LOAD + EXECUTE ARGS #
 ################################################################################################################
 
+# these lines of code are only relevant when running the scripts in batch mode
+# they allow to change input parameters before the simulations are executed
+# for manually running this script in R, they can be skipped
 args = commandArgs(TRUE)
 for(i in 1:length(args)){
 	eval(parse(text=args[[i]]))
@@ -45,9 +49,10 @@ for(i in 1:length(args)){
 # PROGRAM CODE #
 ################################################################################################################
 
+set.seed(11)
+
 source(paste0(inpath,"utility_scripts/utility_functions.R"))
-source(paste0(inpath,"utility_scripts/marginal_model_specifications.R"))
-source(paste0(inpath,"utility_scripts/initialize_models.R"))
+source(paste0(inpath,"utility_scripts/marginal_model_functions.R"))
 load(paste0(inpath,"data/DNA_methylation_data.RData"))
 
 anchr = annotEPIC
@@ -70,12 +75,10 @@ cpg_counts = unlist(lapply(supercl, FUN=function(x){return(length(unlist(x)))} )
 supercl = supercl[cpg_counts <= MAX_CPG_PER_SC] ### HARD SUBSET (save time and memory)
 
 
-
 # release unused data from memory
 rm(super_clusters)
 rm(annotEPIC)
 gc()
-
 
 
 results = data.frame(
@@ -106,7 +109,6 @@ betas_sub = betas.normal6[,selected_samples ]
 X = array(NA,dim=c(num_subjects,length(clusters),max_clst_length))
 QPRED = array(NA,dim=c(num_subjects,length(clusters),max_clst_length))
 num_cpgs = c()
-
 
 
 cat("processing super cluster",rrr,"/",length(supercl),"(",paste(sort(unlist(lapply(clusters,FUN=length))),collapse=","),") with",length(unlist(clusters)),"cpgs ...\n")

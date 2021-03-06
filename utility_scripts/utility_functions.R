@@ -1,21 +1,4 @@
 
-find.clusters.old = function(x,dth){
-	out = list()
-	out_idx = 1
-	ctmp = c(x[1])
-	for(i in 1:length(x)){
-		if(x[i] > dth){
-			out[[out_idx]] = ctmp
-			ctmp = c(x[i])
-			out_idx = out_idx + 1
-		} else{
-			ctmp = c(ctmp,x[i])
-		}
-	}
-	out[[out_idx]] = ctmp
-	return(out)
-}
-
 find.clusters = function(pos,dth){
 	out = list()
 	out_idx = 1
@@ -165,29 +148,12 @@ find.super.clusters = function(clusters,dth){
 	return(out)
 }
 
-find.cluster.length.old = function(x,dth){
-	out = c()
-	out_idx = 1
-	clen = 1
-	for(i in 1:length(x)){
-		if(x[i] > dth){
-			out[out_idx] = clen
-			clen = 1
-			out_idx = out_idx + 1
-		} else{
-			clen = clen + 1
-		}
-	}
-	out[out_idx] = clen
-	return(out)
-}
-
 calculate_super_cluster_span = function(scl){
 	return( scl[[length(scl)]][length(scl[[length(scl)]])]-scl[[1]][1] )
 }
 
 draw_random_mixture_candidates = function(pheno){
-	ctypes = unique(pheno$Cell.Type)
+	ctypes = c("Neutrophil", "NK", "Bcell", "CD4T", "CD8T","Monocyte")
 	indices = c()
 	for(ctp in ctypes){
 		indices = c(indices, sample(which(pheno$Cell.Type == ctp))[1])
@@ -200,32 +166,6 @@ sigmoid = function(x){
 }
 logit = function(x){
 	return( log(x) - log(1-x) )
-}
-
-llt.private = function(x, delta=0, noise = 0.1){
-	return( sigmoid(logit(x) + rnorm(n=1,mean=delta,sd=noise)) )
-}
-
-logit.linear.transform = function(x, delta=0, noise = 0.1){
-	if(length(x)>1){
-		return( sapply(x,FUN=llt.private, delta=delta, noise=noise) )
-	} else{
-		return( llt.private(x=x, delta=delta, noise=noise) )
-	}
-}
-
-check.larger.0 = function(x){
-	return( sum(x>0) == length(x) )
-}
-
-autocor = function(lag,chain){
-	if(lag<=0){
-		return(1)
-	} else{
-		ch1 = chain[-(1:lag)]
-		ch2 = chain[-((length(chain)-lag+1):length(chain))]
-		return(cor(ch1,ch2))
-	}
 }
 
 cross.rate = function(chain,normalized=TRUE){
@@ -281,10 +221,18 @@ ccbn = function(xlist,n){
 	}
 }
 
-diag.line=function(col,lty=1,identity=TRUE){
-	if(identity){
-		lines(c(-10^10,10^10),c(-10^10,10^10),col=col,lty=lty)
-	} else{
-		lines(c(-10^10,10^10),c(10^10,-10^10),col=col,lty=lty)
-	}
+prfun = function(x,a,b,c,minval,maxval){
+	min_slope = b + 2*c*minval
+	max_slope = b + 2*c*maxval
+	min_y = a + b*minval + c*minval^2
+	max_y = a + b*maxval + c*maxval^2
+	min_extrap = min_y + (x-minval)*min_slope
+	max_extrap = max_y + (x-maxval)*max_slope
+	interp = a + b*x + c*x^2
+	
+	out_of_left_bound = x<minval
+	out_of_right_bound = x>maxval
+	within_bounds = !out_of_left_bound & !out_of_right_bound
+	y = (out_of_left_bound)*min_extrap + (within_bounds)*interp + (out_of_right_bound)*max_extrap
+	return(y)
 }
