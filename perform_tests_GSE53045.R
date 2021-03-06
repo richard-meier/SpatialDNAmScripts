@@ -119,10 +119,10 @@ for(b in 1:26){
 kf_mat_SCM2 = sqrt(1/tau_means_mat_SCM2)
 kf_mat_SCM2 = prfun(x=kf_mat_SCM2,0.6950,8.0301,-25.9266,minval=0.0,maxval=0.1128)
 kf_mat_TM = sqrt(1/tau_means_mat_TM)
-kf_mat_TM = kf_mat_TM = prfun(x=kf_mat_TM,0.8525,12.9091,-52.1179,minval=0.0,maxval=0.1143)
+kf_mat_TM = prfun(x=kf_mat_TM,0.8525,12.9091,-52.1179,minval=0.0,maxval=0.1143)
 
 
-# calculate tests statistics (pseudo-p-values)
+# calculate test statistics (pseudo-p-values)
 SCM2_bpv_mat = gam_means_SCM2 / (gam_sds_SCM2*kf_mat_SCM2)
 for(i in 1:6){
 	SCM2_bpv_mat[i,] = (pnorm(q=-abs(SCM2_bpv_mat[i,])))*2

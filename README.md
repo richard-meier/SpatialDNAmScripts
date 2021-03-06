@@ -4,9 +4,12 @@
 Supplementary simulation study and analysis R scripts accompanying the manuscript "A Bayesian spatial correlation model improves detection of cell specific effects of DNA methylation in whole blood"
 
 ## Usage
-Key tasks are accomplished by the main scripts located in the project directory. To fit the Bayesian models OpenBUGS has to first be installed by the user. Within each script, key parameters that have to be modified are: "inpath" which should point to the project directory and "outpath" which specifies were created files will be saved. If there are additional things that need to be specified a script will note this with comments. Commands that install required R packages are provided at the top of each script.
+Key tasks are accomplished by the main scripts located in the project directory. To fit the Bayesian models OpenBUGS has to first be installed by the user. Within each script, key parameters that have to be modified are: "inpath" which should point to the project directory and "outpath" which specifies were created files will be saved. It is important that paths are specified in Unix style. If there are additional things that need to be specified a script will note this with comments. Commands that install required R packages are provided at the top of each script.
 
 ## Main Scripts
+
+### analysis_example.R
+Example script that demonstrates how to perform cell specific analysis of a small example dataset based on the SCM2 and TM models in conjunction with the cluster generating algorithm.
 
 ### processGSE147430.R
 Performs simple analyses based on linear models to identify differences in methylation between smokers and non-smokers in isolated CD8 T-cells.
@@ -44,3 +47,6 @@ Contains R objects and functions required to perform reference based deconvoluti
 
 ### DNA_methylation_data.RData
 Contains DNA methylation data (PMID: 29843789) of isolated blood leukocytes, also available under the GEO accession GSE110554. This data is used to simulate artificial bulk sample DNAm data in whole blood.
+
+### example_data.RData
+Contains a small example dataset that is used in the "analysis_example.R" script.
