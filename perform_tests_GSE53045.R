@@ -95,8 +95,9 @@ batches_start = 1+(0:25)*100
 batches_stop = (1:26)*100
 batches_stop[26] = 2564
 for(b in 1:26){
+	# this needs to be updated according to where the output was stored after running "fit_Bayes_models_to_GSE53045.R"
 	load(paste0(
-		"S:/Biostats/BIO-STAT/Koestler Devin/GRAs/Richard Meier/Project3/real_data_analysis/",
+		".../",
 		"run.GSE53045_cth1.3000_cth2.30000_chr1_start.",batches_start[b],
 		"_stop.",batches_stop[b],
 		"_mat.RDATA"
